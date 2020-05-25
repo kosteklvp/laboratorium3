@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint("MissingPermission")
             @Override
             public void onClick(View v) {
-                Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+                Intent dialIntent = new Intent(Intent.ACTION_CALL);
                 dialIntent.setData(Uri.parse("794947690"));
                 if (dialIntent.resolveActivity(getPackageManager()) != null) {
                     startActivity(dialIntent);
