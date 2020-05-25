@@ -1,5 +1,6 @@
 package com.example.laboratorium3;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button b;
     private TelephonyManager mTelephonyManager;
+    private PhoneStateListenerExtended mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +46,25 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (isTelephonyEnabled()) {
                     checkForPhonePermission();
+                    mListener = new PhoneStateListenerExtended();
+                    mTelephonyManager.listen(mListener, PhoneStateListener.LISTEN_CALL_STATE);
+                } else {
+                    //....
+                }
+                if (dialIntent.resolveActivity(getPackageManager()) != null) {
+                    checkForPhonePermission();
                 }
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (permissions[0].equalsIgnoreCase(Manifest.permission.CALL_PHONE) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+        } else {
+
+        }
     }
 
     private boolean isTelephonyEnabled() {
@@ -55,9 +74,10 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private boolean checkForPhonePermission() {
+    private void checkForPhonePermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+
         } else {
 
         }
