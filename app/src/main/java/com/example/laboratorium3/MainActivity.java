@@ -1,9 +1,12 @@
 package com.example.laboratorium3;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -38,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Log.e("ERROR", "brak");
                 }
+                if (isTelephonyEnabled()) {
+                    checkForPhonePermission();
+                }
             }
         });
     }
@@ -49,7 +55,15 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    
+    private boolean checkForPhonePermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+        } else {
+
+        }
+    }
+
+
 
 
 }
