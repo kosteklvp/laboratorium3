@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     Button b;
+    private TelephonyManager mTelephonyManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         b = findViewById(R.id.call);
+
+        mTelephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 
         b.setOnClickListener(new View.OnClickListener() {
 
@@ -37,6 +41,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private boolean isTelephonyEnabled() {
+        if (mTelephonyManager.getSimState() == TelephonyManager.SIM_STATE_READY) {
+            return true;
+        }
+        return false;
+    }
+
+    
 
 
 }
