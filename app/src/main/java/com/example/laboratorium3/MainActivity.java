@@ -19,11 +19,16 @@ import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
     Button b;
+    DatabaseReference myRef;
     private TelephonyManager mTelephonyManager;
     private PhoneStateListenerExtended mListener;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -33,10 +38,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("message");
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("TAG", dataSnapshot.getValue(String.class));
+                Toast.makeText(getApplicationContext(), "ostatnie polaczenie: " +
+                        dataSnapshot.getValue(String.class), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.w("TAG", "failed to read value", databaseError.toException());
+            }
+        });
+
+        myRef.setValue("Hello, World!");
+
         b = findViewById(R.id.call);
-        FirebaseCrash.log("log blad");
-        FirebaseCrash.logcat(Log.ERROR, "blad", "Przechwycenie bledu");
-        FirebaseCrash.report(new ArrayIndexOutOfBoundsException());
+//        FirebaseCrash.log("log blad");
+//        FirebaseCrash.logcat(Log.ERROR, "blad", "Przechwycenie bledu");
+//        FirebaseCrash.report(new ArrayIndexOutOfBoundsException());
         mTelephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 
         b.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (dialIntent.resolveActivity(getPackageManager()) != null) {
                     checkForPhonePermission();
+                    myRef.setValue("wyslanie");
                 }
             }
         });
