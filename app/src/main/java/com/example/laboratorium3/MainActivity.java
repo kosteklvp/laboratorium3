@@ -17,11 +17,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 public class MainActivity extends AppCompatActivity {
 
     Button b;
     private TelephonyManager mTelephonyManager;
     private PhoneStateListenerExtended mListener;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "001");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "ZDARZENIE");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "TYP_ZDARZENIA");
+
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
     @Override
