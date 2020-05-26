@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         b = findViewById(R.id.call);
-
+        FirebaseCrash.log("log blad");
+        FirebaseCrash.logcat(Log.ERROR, "blad", "Przechwycenie bledu");
+        FirebaseCrash.report(new ArrayIndexOutOfBoundsException());
         mTelephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 
         b.setOnClickListener(new View.OnClickListener() {
@@ -94,8 +98,5 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
-
-
 
 }
